@@ -71,7 +71,6 @@ class CharList extends Component {
 
     setCardRef = card => {
         this.cardRefs.push(card);
-        console.log(this.cardRefs, 'cardRefs');
     }
 
     focusOnCard = (id) => {
