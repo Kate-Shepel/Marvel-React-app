@@ -8,34 +8,25 @@ import './charList.scss';
 const CharList = (props) => {
 
     const [charList, setCharList] = useState([]);
-    const [loading, setLoadng] = useState(true);
-    const [error, setError] = useState(false);
     const [newItemLoading, setNewItemLoading] = useState(false);
     const [offset, setOffset] = useState(210);
     const [charEnded, setCharEnded] = useState(false);
 
-    const marvelService = useMarvelService();
+    const {loading, error, getAllCharacters} = useMarvelService();
 
     useEffect(() => {
-        marvelService.getAllCharacters()
+        getAllCharacters()
             .then(onFirstCharListLoaded)
-            .catch(onError)
     }, [])
 
     const onRequest = () => {
-        onCharListLoading();
-        marvelService.getAllCharacters(offset)
-            .then(onCharListLoaded)
-            .catch(onError)
-    }
-
-    const onCharListLoading = () => {
         setNewItemLoading(true);
+        getAllCharacters(offset)
+            .then(onCharListLoaded)
     }
 
     const onFirstCharListLoaded = (firstCharList) => {
         setCharList(charList => firstCharList);
-        setLoadng(loading => false);
         setNewItemLoading(newItemLoading => false);
         setOffset(offset => offset + 9);
     }
@@ -46,15 +37,9 @@ const CharList = (props) => {
             ended = true;
         }
         setCharList(charList => [...charList, ...newCharList]);
-        setLoadng(loading => false);
         setNewItemLoading(newItemLoading => false);
         setOffset(offset => offset + 9);
         setCharEnded(charEnded => ended);
-    }
-
-    const onError = () => {
-        setError(true);
-        setLoadng(loading => false);
     }
 
     const cardRefs = useRef([]);
@@ -105,14 +90,13 @@ const CharList = (props) => {
     const items = renderItems(charList);
 
     const errorMsg = error ? <ErrorMessage/> : null;
-    const loadingSpinner = loading ? <Spinner/> : null;
-    const charListContent = !(loading || error) ? items : null;
+    const loadingSpinner = loading && !setNewItemLoading ? <Spinner/> : null;
 
     return (
         <div className="char__list">
             {errorMsg}
             {loadingSpinner}
-            {charListContent}
+            {items}
             <button 
                 className="button button__main button__long"
                 disabled={newItemLoading}
