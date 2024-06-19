@@ -33,7 +33,7 @@ const ComicsList = () => {
 
     const onComicsListLoaded = (newComicsList) => {
         let ended = false;
-        if (newComicsList.length < 9) {
+        if (newComicsList.length < 8) {
             ended = true;
         }
         setComicsList(comicsList => [...comicsList, ...newComicsList]);
