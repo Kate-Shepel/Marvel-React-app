@@ -10,7 +10,7 @@ const ComicsList = () => {
 
     const [comicsList, setComicsList] = useState([]);
     const [newItemLoading, setNewItemLoading] = useState(false);
-    const [offset, setOffset] = useState(208);
+    const [offset, setOffset] = useState(220);
     const [comicsEnded, setComicsEnded] = useState(false);
 
     const {loading, error, getComics} = useMarvelService();
@@ -42,14 +42,6 @@ const ComicsList = () => {
         setComicsEnded(comicsEnded => ended);
     }
 
-    // const comicsRefs = useRef([]);
-
-    // const focusOnComics = (id) => {
-    //     comicsRefs.current.forEach(item => item.classList.remove('comics__item_selected'));
-    //     comicsRefs.current[id].classList.add('comics__item_selected');
-    //     comicsRefs.current[id].focus();
-    // }
-
     function renderItems(arr) {
         const items =  arr.map((item, i) => {
 
@@ -62,12 +54,7 @@ const ComicsList = () => {
                 <li 
                 className="comics__item"
                 key={item.id}
-                tabIndex={0}
-                // onClick={() => {
-                //         focusOnComics(i);
-                //     }}
-                // ref={el => comicsRefs.current[i] = el}
-                >
+                tabIndex={0}>
                     <a href="#">
                         <img src={item.thumbnail} alt={item.title} className="comics__item-img" style={imgStyle}/>
                         <div className="comics__item-name">{item.title}</div>
