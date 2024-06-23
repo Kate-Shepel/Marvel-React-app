@@ -1,5 +1,7 @@
-import {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useRef, createRef} from 'react';
 import PropTypes from 'prop-types';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelService';
@@ -57,32 +59,39 @@ const CharList = (props) => {
                 imgStyle = {'objectFit' : 'unset'};
             }
 
+            if (!cardRefs.current[i]) {
+                cardRefs.current[i] = createRef();
+            }
+
             return (
-                <li 
-                    className="char__item"
-                    key={item.id}
-                    tabIndex={0}
-                    onClick={() => {
-                        props.onCharSelected(item.id);
-                        focusOnCard(i);
-                    }}
-                    ref={el => cardRefs.current[i] = el}
-                    onKeyDown={(e) => {
-                        if (e.key === ' ' || e.key === "Enter") {
+                <CSSTransition nodeRef={cardRefs.current[i]} classNames="char__item" timeout={500} key={item.id}>
+                    <li 
+                        className="char__item"
+                        tabIndex={0}
+                        onClick={() => {
                             props.onCharSelected(item.id);
                             focusOnCard(i);
-                        }
-                    }}
-                    >
-                        <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
-                        <div className="char__name">{item.name}</div>
-                </li>
+                        }}
+                        ref={el => cardRefs.current[i] = el}
+                        onKeyDown={(e) => {
+                            if (e.key === ' ' || e.key === "Enter") {
+                                props.onCharSelected(item.id);
+                                focusOnCard(i);
+                            }
+                        }}
+                        >
+                            <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
+                            <div className="char__name">{item.name}</div>
+                    </li>
+                </CSSTransition>
             )
         });
 
         return (
             <ul className="char__grid">
-                {items}
+                <TransitionGroup component={null}>
+                    {items}
+                </TransitionGroup>
             </ul>
         )
     }
